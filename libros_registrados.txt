@@ -1,0 +1,43 @@
+===== REGISTRO DE LIBROS =====
+
+--- Libro 1 ---
+Código: 12
+Título: libro nacho
+Autor: gerardo
+Año: 1998
+Editorial: gerardiMi
+Número de páginas: 80
+
+--- Libro 2 ---
+Código: 13
+Título: ola
+Autor: ola2
+Año: 2000
+Editorial: qsy
+Número de páginas: 80
+
+--- Libro 3 ---
+Código: 14
+Título: qsy2
+Autor: vladimir
+Año: 2005
+Editorial: vladimio=r
+Número de páginas: 90
+
+--- Libro 4 ---
+Código: 15
+Título: popo
+Autor: poppidd
+Año: 2001
+Editorial: popoidexd
+Número de páginas: 100
+
+--- Libro 5 ---
+Código: 16
+Título: samuel
+Autor: erik
+Año: 2002
+Editorial: eriksoto
+Número de páginas: 101
+
+Archivo generado el: 22/11/2025 10:36:43 p. m.

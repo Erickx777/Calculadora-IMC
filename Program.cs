@@ -1,87 +1,154 @@
-/*CALCULADORA DE IMC. si es menor a 18.5 es bajo, si es menor a 25 es normal,
-si esta por debajo de 30 es sobrepeso y si esta fuera de esos rangos, es obecidad.*/
-
 using System;
-using System.Threading.Tasks.Dataflow;
-using System.Xml;
+using System.Collections.Generic; 
 
-class CalculadoraIMC
+namespace FarmaciaJuan
 {
-    static void Main()
+    class Program
     {
-        bool continuar = true;
+        static void Main(string[] args)
+        {
+            
+            List<string> nombres = new List<string>();
+            List<int> cantidades = new List<int>();
+            List<double> precios = new List<double>();
+            
+            double totalVentas = 0;
+            string opcion = "";
 
-            while (continuar)
+            
+            while (opcion != "5")
             {
+                Console.WriteLine("\n--- FARMACIA DE JUAN ---");
+                Console.WriteLine("1. Registrar medicamento");
+                Console.WriteLine("2. Consultar inventario");
+                Console.WriteLine("3. Vender medicamento");
+                Console.WriteLine("4. Ver total de ventas");
+                Console.WriteLine("5. Salir");
+                Console.Write("Seleccione una opción: ");
+                opcion = Console.ReadLine();
 
-                Console.Clear();
-                Console.WriteLine("\n------CALCULADORA IMC------");
-
-            try
-            {
-                Console.Write("\nColoque su peso en KG: ");
-                double peso = double.Parse(Console.ReadLine());
-
-                Console.Write("Coloque su altura en metros: ");
-                double altura = double.Parse(Console.ReadLine());
-
-                double imc = peso / (altura * altura);
-
-                Console.WriteLine("\n------RESULTADOS------");
-                Console.WriteLine($"\nSu altura es: {altura}");
-                Console.WriteLine($"Su peso es: {peso}");
-                Console.WriteLine($"Su IMC es: {imc:F2}");
-
-                if (imc < 18.5)
+                
+                if (opcion == "1")
                 {
-                    Console.WriteLine("Tienes un peso bajo.");
+                    RegistrarMedicamento(nombres, cantidades, precios);
                 }
-                else if (imc < 25)
+                else if (opcion == "2")
                 {
-                    Console.WriteLine("Tienes un peso normal.");
+                    ConsultarInventario(nombres, cantidades, precios);
                 }
-                else if (imc < 30)
+                else if (opcion == "3")
                 {
-                    Console.WriteLine("Tienes Sobrepeso");
+                    
+                    totalVentas = VenderMedicamento(nombres, cantidades, precios, totalVentas);
+                }
+                else if (opcion == "4")
+                {
+                    MostrarTotalVentas(totalVentas);
+                }
+                else if (opcion == "5")
+                {
+                    Console.WriteLine("Saliendo del programa...");
                 }
                 else
                 {
-                    Console.WriteLine("Tienes Obecidad.");
+                    Console.WriteLine("Opción no válida.");
+                }
+            }
+        }
+
+        
+        static void RegistrarMedicamento(List<string> nombres, List<int> cantidades, List<double> precios)
+        {
+            Console.Write("Ingrese el nombre del medicamento: ");
+            string nombre = Console.ReadLine();
+
+            Console.Write("Ingrese la cantidad: ");
+            int cantidad = int.Parse(Console.ReadLine());
+
+            Console.Write("Ingrese el precio unitario: ");
+            double precio = double.Parse(Console.ReadLine());
+
+            
+            nombres.Add(nombre);
+            cantidades.Add(cantidad);
+            precios.Add(precio);
+
+            Console.WriteLine("¡Medicamento registrado con éxito!");
+        }
+
+        
+        static void ConsultarInventario(List<string> nombres, List<int> cantidades, List<double> precios)
+        {
+            Console.WriteLine("\n--- INVENTARIO ACTUAL ---");
+            if (nombres.Count == 0)
+            {
+                Console.WriteLine("No hay medicamentos registrados.");
+                return;
+            }
+
+            for (int i = 0; i < nombres.Count; i++)
+            {
+                Console.WriteLine($"Medicamento: {nombres[i]} | Cantidad: {cantidades[i]} | Precio: {precios[i]}");
+            }
+        }
+
+        
+        static double VenderMedicamento(List<string> nombres, List<int> cantidades, List<double> precios, double totalVentas)
+        {
+            Console.Write("Ingrese el nombre del medicamento a vender: ");
+            string nombreBusqueda = Console.ReadLine();
+
+            int indice = -1; 
+
+            
+            for (int i = 0; i < nombres.Count; i++)
+            {
+                if (nombres[i].ToLower() == nombreBusqueda.ToLower())
+                {
+                    indice = i;
+                    break;
                 }
             }
 
-            catch (FormatException)
-        {
-            Console.WriteLine("\nError: Debes coloar datos validos. EJEMPLO(1.72 EN ALTURA Y 84 O 77.2 EN PESO.)");
-        }
-
-        Console.WriteLine("\nQue deseas hacer?");
-        Console.WriteLine("\nPresiona ENTER para salir.");
-        Console.WriteLine("Presiona R para reintentar");
-        Console.Write("Selecciona una opcion: ");
-
-        ConsoleKeyInfo teclaU = Console.ReadKey();
-        Console.WriteLine();
-
-        if(teclaU.Key == ConsoleKey.Enter)
-        {
-            Console.WriteLine("\nAdios singa tu madre, vayase al diablo.");
-            continuar = false;
-        }else if(teclaU.Key == ConsoleKey.R)
-        {
-            Console.WriteLine("\nBienvenido de nuevo, EL MEJOR!");
-                System.Threading.Thread.Sleep(1000);
-
-        }else
-        {
-            Console.WriteLine("\nDebes seleccionar una de las opciones que se te pide BUEN MMG, AHORA TE WUA SACAR.");
-            continuar = false;
-        }
-           
+            
+            if (indice == -1)
+            {
+                Console.WriteLine("Error: El medicamento no existe en el inventario.");
+                return totalVentas;
             }
+
+            Console.Write($"Cantidad disponible: {cantidades[indice]}. Ingrese cantidad a vender: ");
+            int cantidadVenta = int.Parse(Console.ReadLine());
+
             
-            
+            if (cantidadVenta > cantidades[indice])
+            {
+                Console.WriteLine("Error: No hay suficiente stock para realizar la venta.");
+            }
+            else if (cantidadVenta <= 0)
+            {
+                Console.WriteLine("Error: La cantidad a vender debe ser mayor a 0.");
+            }
+            else
+            {
+                
+                cantidades[indice] -= cantidadVenta;
+                
+                
+                double costoVenta = cantidadVenta * precios[indice];
+                totalVentas += costoVenta;
+
+                Console.WriteLine($"Venta exitosa. Total de esta venta: {costoVenta}");
+                Console.WriteLine($"Stock actual de {nombres[indice]}: {cantidades[indice]}");
+            }
+
+            return totalVentas;
+        }
+
+        
+        static void MostrarTotalVentas(double totalVentas)
+        {
+            Console.WriteLine($"\nEl total de ventas realizadas en el día es: {totalVentas}");
+        }
     }
 }
-
-
